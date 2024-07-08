@@ -4,7 +4,7 @@ using MultiShop.Catalog.Settings;
 
 namespace MultiShop.Catalog.Services;
 
-public class GenericService <TEntity,CreateDto,ResultDto,UpdateDto> :IGenericService<CreateDto,ResultDto,UpdateDto>
+public class GenericService <TEntity,CreateDto,ResultDto,UpdateDto> :IGenericService<TEntity,CreateDto,ResultDto,UpdateDto>
     where TEntity : class
     where CreateDto : class
     where ResultDto : class

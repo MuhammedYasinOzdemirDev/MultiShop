@@ -1,6 +1,6 @@
 namespace MultiShop.Catalog.Services;
 
-public interface IGenericService<CreateDto, ResultDto, UpdateDto>
+public interface IGenericService<TEntity,CreateDto, ResultDto, UpdateDto>
 {
     Task<IEnumerable<ResultDto>> GetAllAsync();
     Task<ResultDto> GetByIdAsync(string id);
