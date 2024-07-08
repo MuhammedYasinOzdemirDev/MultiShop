@@ -3,7 +3,8 @@ using MultiShop.Catalog.Dtos.Product;
 using MultiShop.Catalog.Services.Product;
 
 namespace MultiShop.Catalog.Controllers;
-
+[ApiController]
+[Route("api/Product")]
 public class ProductController : ControllerBase
 {
     private readonly IProductService _ProductService;

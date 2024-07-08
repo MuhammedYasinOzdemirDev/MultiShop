@@ -3,7 +3,8 @@ using MultiShop.Catalog.Dtos.ProductImage;
 using MultiShop.Catalog.Services.ProductImage;
 
 namespace MultiShop.Catalog.Controllers;
-
+[ApiController]
+[Route("api/ProductImage")]
 public class ProductImageController : Controller
 {
     private readonly IProductImageService _ProductImageService;
