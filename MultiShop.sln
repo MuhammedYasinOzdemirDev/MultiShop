@@ -4,6 +4,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{45
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiShop.Catalog", "MultiShop.Catalog\MultiShop.Catalog.csproj", "{3E88BAF6-523E-4847-B685-E1ADA5DF9A01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiShop.Catalog.Tests", "MultiShop.Catalog.Tests\MultiShop.Catalog.Tests.csproj", "{B23F17B6-0328-4282-9309-643AFDAC336C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -11,11 +13,16 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3E88BAF6-523E-4847-B685-E1ADA5DF9A01} = {45322033-83C9-4832-B063-4B94DCAA6579}
+		{B23F17B6-0328-4282-9309-643AFDAC336C} = {45322033-83C9-4832-B063-4B94DCAA6579}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3E88BAF6-523E-4847-B685-E1ADA5DF9A01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E88BAF6-523E-4847-B685-E1ADA5DF9A01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E88BAF6-523E-4847-B685-E1ADA5DF9A01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E88BAF6-523E-4847-B685-E1ADA5DF9A01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B23F17B6-0328-4282-9309-643AFDAC336C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B23F17B6-0328-4282-9309-643AFDAC336C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B23F17B6-0328-4282-9309-643AFDAC336C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B23F17B6-0328-4282-9309-643AFDAC336C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
