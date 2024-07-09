@@ -1,5 +1,6 @@
 using MultiShop.Catalog.Mappings;
 using Microsoft.Extensions.Options;
+using MultiShop.Catalog.Handles;
 using MultiShop.Catalog.Services;
 using MultiShop.Catalog.Services.Category;
 using MultiShop.Catalog.Services.Product;
@@ -9,7 +10,10 @@ using MultiShop.Catalog.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(new ApiExceptionFilterAttribute());
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -40,10 +44,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<ExceptionMiddleware>(); 
 app.UseHttpsRedirection();
+app.UseRouting();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 
 app.Run();
