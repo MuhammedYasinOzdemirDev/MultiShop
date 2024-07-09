@@ -7,12 +7,21 @@ using MultiShop.Catalog.Services.Product;
 using MultiShop.Catalog.Services.ProductDetail;
 using MultiShop.Catalog.Services.ProductImage;
 using MultiShop.Catalog.Settings;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+);
+builder.Services.AddLogging();
 builder.Services.AddControllers(options =>
 {
-    options.Filters.Add(new ApiExceptionFilterAttribute());
+    options.Filters.Add(new ApiExceptionFilterAttribute(builder.Services.BuildServiceProvider().
+        GetRequiredService<ILogger<ApiExceptionFilterAttribute>>()));
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

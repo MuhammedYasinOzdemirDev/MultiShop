@@ -12,12 +12,14 @@ public class GenericService <TEntity,CreateDto,ResultDto,UpdateDto> :IGenericSer
 {
     private readonly IMapper _mapper;
     private readonly IMongoCollection<TEntity> _collection;
-    public GenericService(IMapper mapper,IDatabaseSettings settings)
+    private readonly ILogger<GenericService<TEntity, CreateDto, ResultDto, UpdateDto>> _logger;
+    public GenericService(IMapper mapper,IDatabaseSettings settings,ILogger<GenericService<TEntity, CreateDto, ResultDto, UpdateDto>> logger)
     {
         _mapper = mapper;
         var client = new MongoClient(settings.ConnectionString);
         var database = client.GetDatabase(settings.DatabaseName);
         _collection = database.GetCollection<TEntity>(GetCollectionName(typeof(TEntity), settings));
+        _logger = logger;
     }
     private string GetCollectionName(Type entityType, IDatabaseSettings settings)
     {
@@ -44,30 +46,68 @@ public class GenericService <TEntity,CreateDto,ResultDto,UpdateDto> :IGenericSer
     }
     public async Task<IEnumerable<ResultDto>> GetAllAsync()
     {
-       var values= await _collection.Find(x => true).ToListAsync();
-       return values.Select(x => _mapper.Map<ResultDto>(x));
+        try
+        {
+            var values = await _collection.Find(x => true).ToListAsync();
+            _logger.LogInformation($"{values.Count} entities retrieved from {typeof(TEntity).Name} collection.");
+            return values.Select(x => _mapper.Map<ResultDto>(x));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error in {nameof(GetAllAsync)}: {ex.Message}", ex);
+            throw;
+        }
     }
 
     public async Task<ResultDto> GetByIdAsync(string id)
     {
+        try
+        {
         var filter = GetFilterById(id);
         var value =await _collection.Find(filter).FirstOrDefaultAsync();
+        if (value == null) 
+        {
+            _logger.LogWarning($"Entity with id {id} not found in {typeof(TEntity).Name} collection.");
+            throw new Exception("Entity not found.");
+        }
+        _logger.LogInformation($"Entity with id {id} retrieved from {typeof(TEntity).Name} collection.");
         return _mapper.Map<ResultDto>(value);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error in {nameof(GetByIdAsync)}: {ex.Message}", ex);
+            throw;
+        }
     }
 
     public async Task CreateAsync(CreateDto dto)
     {
+        try
+        {
         var value = _mapper.Map<TEntity>(dto);
         await _collection.InsertOneAsync(value);
+        _logger.LogInformation($"Entity created in {typeof(TEntity).Name} collection.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error in {nameof(CreateAsync)}: {ex.Message}", ex);
+            throw;
+        }
     }
 
     public async Task UpdateAsync( string id,UpdateDto dto)
     {
+        try
+        {
         var filter = GetFilterById(id);
         var update = _mapper.Map<TEntity>(dto);
         
-     
         var existingEntity = await _collection.Find(filter).FirstOrDefaultAsync();
+        if (existingEntity == null) 
+        {
+            _logger.LogWarning($"Entity with id {id} not found in {typeof(TEntity).Name} collection.");
+            throw new Exception("Entity not found.");
+        }
         if (existingEntity == null) throw new KeyNotFoundException("Entity not found");
 
         _mapper.Map(dto, existingEntity); //Dtodan gelen veriler mevcut veriler guncellenir
@@ -75,14 +115,35 @@ public class GenericService <TEntity,CreateDto,ResultDto,UpdateDto> :IGenericSer
         
         if (updateResult.MatchedCount == 0)
         {
-            throw new KeyNotFoundException("Entity not found");
+            _logger.LogWarning($"Entity with id {id} not updated in {typeof(TEntity).Name} collection.");
+            throw new Exception("Entity not found.");
+        }
+        _logger.LogInformation($"Entity with id {id} updated in {typeof(TEntity).Name} collection.");
+        }
+        catch (Exception ex){
+            _logger.LogError($"Error in {nameof(UpdateAsync)}: {ex.Message}", ex);
+             throw;
         }
     }
 
     public async Task DeleteAsync(string id)
     {
+        try
+        {
         var filter = GetFilterById(id);
-         await _collection.DeleteOneAsync(id);
+        var deleteResult= await _collection.DeleteOneAsync(id);
+         if (deleteResult.DeletedCount == 0)
+         {
+             _logger.LogWarning($"Entity with id {id} not found in {typeof(TEntity).Name} collection.");
+             throw new Exception("Entity not found.");
+         }
+         _logger.LogInformation($"Entity with id {id} deleted from {typeof(TEntity).Name} collection.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error in {nameof(DeleteAsync)}: {ex.Message}", ex);
+            throw;
+        }
     }
     private FilterDefinition<TEntity> GetFilterById(string id)
     {
