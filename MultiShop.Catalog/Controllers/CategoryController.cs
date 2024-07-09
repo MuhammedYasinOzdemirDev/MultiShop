@@ -21,6 +21,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
+          
             var values = await _categoryService.GetAllAsync();
             _logger.LogInformation("Category list retrieved successfully.");
             return Ok(values);
@@ -52,10 +53,15 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCategory(CreateCategoryDto dto)
+    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto dto)
     {
         try
         {
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Invalid category data.");
+                return BadRequest(ModelState);
+            }
             if (dto == null)
             {
                 _logger.LogWarning("Invalid category data.");
