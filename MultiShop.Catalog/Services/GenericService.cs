@@ -102,30 +102,30 @@ public class GenericService <TEntity,CreateDto,ResultDto,UpdateDto> :IGenericSer
     {
         try
         {
-        var filter = GetFilterById(id);
-        var update = _mapper.Map<TEntity>(dto);
-        
-        var existingEntity = await _collection.Find(filter).FirstOrDefaultAsync();
-        if (existingEntity == null) 
-        {
-            _logger.LogWarning($"Entity with id {id} not found in {typeof(TEntity).Name} collection.");
-            throw new Exception("Entity not found.");
-        }
-        if (existingEntity == null) throw new KeyNotFoundException("Entity not found");
+            var filter = GetFilterById(id);
+            var existingEntity = await _collection.Find(filter).FirstOrDefaultAsync();
 
-        _mapper.Map(dto, existingEntity); //Dtodan gelen veriler mevcut veriler guncellenir
-        var updateResult = await _collection.ReplaceOneAsync(filter, existingEntity);
-        
-        if (updateResult.MatchedCount == 0)
+            if (existingEntity == null)
+            {
+                _logger.LogWarning($"Entity with id {id} not found in {typeof(TEntity).Name} collection.");
+                throw new Exception("Entity not found.");
+            }
+
+            _mapper.Map(dto, existingEntity); // Dtodan gelen veriler mevcut veriler guncellenir
+            var updateResult = await _collection.ReplaceOneAsync(filter, existingEntity);
+
+            if (updateResult.MatchedCount == 0)
+            {
+                _logger.LogWarning($"Entity with id {id} not updated in {typeof(TEntity).Name} collection.");
+                throw new Exception("Entity not found.");
+            }
+
+            _logger.LogInformation($"Entity with id {id} updated in {typeof(TEntity).Name} collection.");
+        }
+        catch (Exception ex)
         {
-            _logger.LogWarning($"Entity with id {id} not updated in {typeof(TEntity).Name} collection.");
-            throw new Exception("Entity not found.");
-        }
-        _logger.LogInformation($"Entity with id {id} updated in {typeof(TEntity).Name} collection.");
-        }
-        catch (Exception ex){
             _logger.LogError($"Error in {nameof(UpdateAsync)}: {ex.Message}", ex);
-             throw;
+            throw;
         }
     }
 
