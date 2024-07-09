@@ -13,14 +13,17 @@ public class GenericService <TEntity,CreateDto,ResultDto,UpdateDto> :IGenericSer
     private readonly IMapper _mapper;
     private readonly IMongoCollection<TEntity> _collection;
     private readonly ILogger<GenericService<TEntity, CreateDto, ResultDto, UpdateDto>> _logger;
-    public GenericService(IMapper mapper,IDatabaseSettings settings,ILogger<GenericService<TEntity, CreateDto, ResultDto, UpdateDto>> logger)
+    private readonly IMongoClient _client;
+
+    public GenericService(IMapper mapper, IDatabaseSettings settings, ILogger<GenericService<TEntity, CreateDto, ResultDto, UpdateDto>> logger, IMongoClient client = null)
     {
         _mapper = mapper;
-        var client = new MongoClient(settings.ConnectionString);
-        var database = client.GetDatabase(settings.DatabaseName);
-        _collection = database.GetCollection<TEntity>(GetCollectionName(typeof(TEntity), settings));
         _logger = logger;
+        _client = client ?? new MongoClient(settings.ConnectionString);
+        var database = _client.GetDatabase(settings.DatabaseName);
+        _collection = database.GetCollection<TEntity>(GetCollectionName(typeof(TEntity), settings));
     }
+
     private string GetCollectionName(Type entityType, IDatabaseSettings settings)
     {
         if (entityType == typeof(Entities.Category))
