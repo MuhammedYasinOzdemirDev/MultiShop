@@ -8,42 +8,104 @@ namespace MultiShop.Catalog.Controllers;
 public class ProductDetailController : ControllerBase
 {
     private readonly IProductDetailService _ProductDetailService;
+    private readonly ILogger<ProductDetailController> _logger;
 
-    public ProductDetailController(IProductDetailService ProductDetailService)
+    public ProductDetailController(IProductDetailService ProductDetailService, ILogger<ProductDetailController> logger)
     {
         _ProductDetailService = ProductDetailService;
+        _logger = logger;
     }
 
     [HttpGet]
     public async Task<IActionResult> ProductDetailList()
     {
-        var values = await _ProductDetailService.GetAllAsync();
-        return Ok(values);
+        try
+        {
+            var values = await _ProductDetailService.GetAllAsync();
+            _logger.LogInformation("Product detail list retrieved successfully.");
+            return Ok(values);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error in {nameof(ProductDetailList)}: {ex.Message}", ex);
+            return StatusCode(500, "Internal server error");
+        }
     }
 
     [HttpGet("id")]
     public async Task<IActionResult> GetByIdProductDetail(string id)
     {
-        var value = await _ProductDetailService.GetByIdAsync(id);
-        return Ok(value);
+        try
+        {
+            var value = await _ProductDetailService.GetByIdAsync(id);
+            if (value == null)
+            {
+                _logger.LogWarning($"Product detail with id {id} not found.");
+                return NotFound("Product detail not found.");
+            }
+            _logger.LogInformation($"Product detail with id {id} retrieved successfully.");
+            return Ok(value);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error in {nameof(GetByIdProductDetail)}: {ex.Message}", ex);
+            return StatusCode(500, "Internal server error");
+        }
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateProductDetail(CreateProductDetailDto dto)
     {
-        await _ProductDetailService.CreateAsync(dto);
-        return Ok();
+        try
+        {
+            if (dto == null)
+            {
+                _logger.LogWarning("Invalid product detail data.");
+                return BadRequest("Invalid product detail data.");
+            }
+            await _ProductDetailService.CreateAsync(dto);
+            _logger.LogInformation("Product detail created successfully.");
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error in {nameof(CreateProductDetail)}: {ex.Message}", ex);
+            return StatusCode(500, "Internal server error");
+        }
     }
     [HttpPut]
     public async Task<IActionResult> UpdateProductDetail(UpdateProductDetailDto dto)
     {
-        await _ProductDetailService.UpdateAsync(dto.ProductDetailId,dto);
-        return Ok();
+        try
+        {
+            if (dto == null)
+            {
+                _logger.LogWarning("Invalid product detail data.");
+                return BadRequest("Invalid product detail data.");
+            }
+            await _ProductDetailService.UpdateAsync(dto.ProductDetailId, dto);
+            _logger.LogInformation($"Product detail with id {dto.ProductDetailId} updated successfully.");
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error in {nameof(UpdateProductDetail)}: {ex.Message}", ex);
+            return StatusCode(500, "Internal server error");
+        }
     }
     [HttpDelete]
     public async Task<IActionResult> DeleteProductDetail(string id)
     {
-        await _ProductDetailService.DeleteAsync(id);
-        return Ok();
+        try
+        {
+            await _ProductDetailService.DeleteAsync(id);
+            _logger.LogInformation($"Product detail with id {id} deleted successfully.");
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error in {nameof(DeleteProductDetail)}: {ex.Message}", ex);
+            return StatusCode(500, "Internal server error");
+        }
     }
 }
