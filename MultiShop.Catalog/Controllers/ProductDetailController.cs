@@ -4,7 +4,7 @@ using MultiShop.Catalog.Services.ProductDetail;
 
 namespace MultiShop.Catalog.Controllers;
 [ApiController]
-[Route("api/ProductDetail")]
+[Route("api/[controller]")]
 public class ProductDetailController : ControllerBase
 {
     private readonly IProductDetailService _ProductDetailService;

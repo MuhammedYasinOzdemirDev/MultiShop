@@ -5,7 +5,7 @@ using MultiShop.Catalog.Services.Category;
 namespace MultiShop.Catalog.Controllers;
 
 [ApiController]
-[Route("api/Category")]
+[Route("api/[controller]")]
 public class CatagoryController : ControllerBase
 {
     private readonly ICategoryService _categoryService;

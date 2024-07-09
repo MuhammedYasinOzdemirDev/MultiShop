@@ -4,7 +4,7 @@ using MultiShop.Catalog.Services.ProductImage;
 
 namespace MultiShop.Catalog.Controllers;
 [ApiController]
-[Route("api/ProductImage")]
+[Route("api/[controller]")]
 public class ProductImageController : Controller
 {
     private readonly IProductImageService _ProductImageService;

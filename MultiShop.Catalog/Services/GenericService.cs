@@ -51,7 +51,7 @@ public class GenericService <TEntity,CreateDto,ResultDto,UpdateDto> :IGenericSer
     public async Task<ResultDto> GetByIdAsync(string id)
     {
         var filter = GetFilterById(id);
-        var value = _collection.Find(filter).FirstOrDefaultAsync();
+        var value =await _collection.Find(filter).FirstOrDefaultAsync();
         return _mapper.Map<ResultDto>(value);
     }
 
