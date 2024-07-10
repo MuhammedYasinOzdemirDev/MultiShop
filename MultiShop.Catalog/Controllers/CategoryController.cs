@@ -31,7 +31,7 @@ public class CategoryController : ControllerBase
             }
     }
 
-    [HttpGet("id")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetByIdCategory(string id)
     {
         try

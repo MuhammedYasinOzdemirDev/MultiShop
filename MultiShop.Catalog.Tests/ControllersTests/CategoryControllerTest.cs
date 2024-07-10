@@ -12,13 +12,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class CategoryControllerTests
+public class CategoryControllerTest
     {
         private readonly Mock<ICategoryService> _mockCategoryService;
         private readonly Mock<ILogger<CategoryController>> _mockLogger;
         private readonly CategoryController _controller;
 
-        public CategoryControllerTests()
+        public CategoryControllerTest()
         {
             _mockCategoryService = new Mock<ICategoryService>();
             _mockLogger = new Mock<ILogger<CategoryController>>();
