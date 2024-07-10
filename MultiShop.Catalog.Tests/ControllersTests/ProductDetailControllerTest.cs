@@ -27,7 +27,7 @@ namespace MultiShop.Catalog.Tests.Controllers;
         public async Task ProductDetailList_ReturnsOkResult_WithAListOfProductDetails()
         {
             // Arrange: Test için gerekli verileri ve davranışları ayarla.
-            var productDetails = new List<ResultProductDetailDto> { new ResultProductDetailDto { ProductDetailId = "1", ProductDescription = "Detail1" } };
+            var productDetails = new List<ResultProductDetailDto> { new ResultProductDetailDto { ProductDetailId = "1", ProductDescription = "Detail1" ,ProductInfo = "ds",ProductId = "1"} };
             _mockProductDetailService.Setup(service => service.GetAllAsync()).ReturnsAsync(productDetails);
 
             // Act: Test edilen metodu çağır.
@@ -56,7 +56,7 @@ namespace MultiShop.Catalog.Tests.Controllers;
         public async Task GetByIdProductDetail_ReturnsOkResult_WhenProductDetailExists()
         {
             // Arrange: Test için gerekli verileri ve davranışları ayarla.
-            var productDetail = new ResultProductDetailDto { ProductDetailId = "1", ProductDescription = "Detail1" };
+            var productDetail = new ResultProductDetailDto { ProductDetailId = "1", ProductDescription = "Detail1" ,ProductInfo = "ds",ProductId = "1"};
             _mockProductDetailService.Setup(service => service.GetByIdAsync("1")).ReturnsAsync(productDetail);
 
             // Act: Test edilen metodu çağır.
@@ -82,7 +82,7 @@ namespace MultiShop.Catalog.Tests.Controllers;
         public async Task CreateProductDetail_ReturnsOkResult_WhenDtoIsValid()
         {
             // Arrange: Test için gerekli verileri ve davranışları ayarla.
-            var dto = new CreateProductDetailDto { ProductDescription = "New Detail" };
+            var dto = new CreateProductDetailDto { ProductDescription = "New Detail" ,ProductInfo = "ds",ProductId = "1"};
 
             // Act: Test edilen metodu çağır.
             var result = await _controller.CreateProductDetail(dto);
@@ -105,7 +105,7 @@ namespace MultiShop.Catalog.Tests.Controllers;
         public async Task UpdateProductDetail_ReturnsOkResult_WhenDtoIsValid()
         {
             // Arrange: Test için gerekli verileri ve davranışları ayarla.
-            var dto = new UpdateProductDetailDto { ProductDetailId = "1", ProductDescription = "Updated Detail" };
+            var dto = new UpdateProductDetailDto { ProductDetailId = "1", ProductDescription = "Updated Detail" ,ProductInfo = "ds",ProductId = "1"};
 
             // Act: Test edilen metodu çağır.
             var result = await _controller.UpdateProductDetail(dto);
