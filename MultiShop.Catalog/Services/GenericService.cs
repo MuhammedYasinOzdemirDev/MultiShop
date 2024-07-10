@@ -19,8 +19,8 @@ public class GenericService <TEntity,CreateDto,ResultDto,UpdateDto> :IGenericSer
     {
         _mapper = mapper;
         _logger = logger;
-        _client = client ?? new MongoClient(settings.ConnectionString);
-        var database = _client.GetDatabase(settings.DatabaseName);
+        _client = client ?? new MongoClient("mongodb://localhost:27017");
+        var database = _client.GetDatabase(settings.DatabaseName ?? "IntegrationTestDatabase");
         _collection = database.GetCollection<TEntity>(GetCollectionName(typeof(TEntity), settings));
     }
 
