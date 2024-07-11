@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using MultiShop.Discount.Context;
 using MultiShop.Discount.Services;
 using Serilog;
 
@@ -14,7 +16,8 @@ builder.Host.UseSerilog();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
-
+builder.Services.AddDbContext<DapperContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

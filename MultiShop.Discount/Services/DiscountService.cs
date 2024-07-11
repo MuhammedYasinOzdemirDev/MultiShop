@@ -17,7 +17,7 @@ public class DiscountService:IDiscountService
 
     public async Task<List<ResultCouponDto>> GetAllCouponAsync()
     {
-        var query = "SELECT * FROM Coupons";
+        var query = "SELECT * FROM \"MultiShop.Discount\".public.\"Coupons\"";;
 
         try
         {
@@ -38,7 +38,7 @@ public class DiscountService:IDiscountService
 
     public async Task CreateCouponAsync(CreateCouponDto dto)
     {
-        var query = "INSERT INTO Coupons (Code, Rate, IsActive, ValidDate) VALUES (@code, @rate, @isActive, @validDate)";
+        var query = "INSERT INTO \"MultiShop.Discount\".public.\"Coupons\" (\"Code\", \"Rate\", \"IsActive\", \"ValidDate\") VALUES (@code, @rate, @isActive, @validDate)";
         var parameters = new DynamicParameters();
         parameters.Add("@code", dto.Code);
         parameters.Add("@rate", dto.Rate);
@@ -63,7 +63,7 @@ public class DiscountService:IDiscountService
 
     public async Task UpdateCouponAsync(UpdateCouponDto dto)
     {
-        var query = "UPDATE Coupons SET Code=@code, Rate=@rate, IsActive=@isActive, ValidDate=@validDate WHERE CouponId=@couponId";
+        var query = "UPDATE \"MultiShop.Discount\".public.\"Coupons\"  SET \"Code\"= @code, \"Rate\"=@rate , \"IsActive\"=@isActive , \"ValidDate\"=@validDate WHERE \"CouponId\" =@couponId";
         var parameters = new DynamicParameters();
         parameters.Add("@code", dto.Code);
         parameters.Add("@rate", dto.Rate);
@@ -96,7 +96,7 @@ public class DiscountService:IDiscountService
 
     public async Task DeleteCouponAsync(int id)
     {
-        var query = "DELETE FROM Coupons WHERE CouponId=@couponId";
+        var query = "DELETE FROM \"MultiShop.Discount\".public.\"Coupons\" WHERE \"CouponId\" =@couponId";
         var parameters = new DynamicParameters();
         parameters.Add("@couponId", id);
 
@@ -125,7 +125,7 @@ public class DiscountService:IDiscountService
 
     public async Task<ResultCouponDto> GetByIdCouponAsync(int id)
     {
-        var query = "SELECT * FROM Coupons WHERE CouponId=@couponId";
+        var query = "SELECT * FROM \"MultiShop.Discount\".public.\"Coupons\" WHERE \"CouponId\" =@couponId";
         var parameters = new DynamicParameters();
         parameters.Add("@couponId", id);
 
