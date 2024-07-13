@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace MultiShop.Order.Application.Features.CQRS.Commands.AddressCommands;
 
-public class RemoveAddressCommand
+public class RemoveAddressCommand:IRequest
 {
     public int Id { get; set; }
 

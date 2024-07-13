@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace MultiShop.Order.Application.Features.CQRS.Commands.AddressCommands;
 
-public class UpdateAddressCommand
+public class UpdateAddressCommand:IRequest
 {
     public int AddressId { get; set; }
     public int UserId { get; set; }
