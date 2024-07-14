@@ -16,17 +16,17 @@ public class AddressRepository:IRepository<Address>
         throw new NotImplementedException();
     }
 
-    public Task<Address> CreateAsync(Address entity)
+    public Task<int> CreateAsync(Address entity)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Address> UpdateAsync(Address entiy)
+    public Task<bool> UpdateAsync(Address entiy)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Address> DeleteAsync(Address entity)
+    public Task<bool> DeleteAsync(Address entity)
     {
         throw new NotImplementedException();
     }

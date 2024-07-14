@@ -16,17 +16,17 @@ public class OrderingRExperssionepository:IRepository<Ordering>
         throw new NotImplementedException();
     }
 
-    public Task<Ordering> CreateAsync(Ordering entity)
+    public Task<int> CreateAsync(Ordering entity)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Ordering> UpdateAsync(Ordering entiy)
+    public Task<bool> UpdateAsync(Ordering entiy)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Ordering> DeleteAsync(Ordering entity)
+    public Task<bool> DeleteAsync(Ordering entity)
     {
         throw new NotImplementedException();
     }

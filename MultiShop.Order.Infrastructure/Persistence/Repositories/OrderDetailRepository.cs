@@ -16,17 +16,17 @@ public class OrderDetailRepository:IRepository<OrderDetail>
         throw new NotImplementedException();
     }
 
-    public Task<OrderDetail> CreateAsync(OrderDetail entity)
+    public Task<int> CreateAsync(OrderDetail entity)
     {
         throw new NotImplementedException();
     }
 
-    public Task<OrderDetail> UpdateAsync(OrderDetail entiy)
+    public Task<bool> UpdateAsync(OrderDetail entiy)
     {
         throw new NotImplementedException();
     }
 
-    public Task<OrderDetail> DeleteAsync(OrderDetail entity)
+    public Task<bool> DeleteAsync(OrderDetail entity)
     {
         throw new NotImplementedException();
     }

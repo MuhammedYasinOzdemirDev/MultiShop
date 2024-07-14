@@ -2,7 +2,7 @@ using MediatR;
 
 namespace MultiShop.Order.Application.Features.CQRS.Commands.AddressCommands;
 
-public class UpdateAddressCommand:IRequest
+public class UpdateAddressCommand:IRequest<bool>
 {
     public int AddressId { get; set; }
     public int UserId { get; set; }

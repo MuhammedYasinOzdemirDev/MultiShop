@@ -2,7 +2,7 @@ using MediatR;
 
 namespace MultiShop.Order.Application.Features.CQRS.Commands.OrderDetailCommands;
 
-public class UpdateOrderDetailCommand:IRequest
+public class UpdateOrderDetailCommand:IRequest<bool>
 {
     public int OrderDetailId { get; set; }
     public int ProductId { get; set; }

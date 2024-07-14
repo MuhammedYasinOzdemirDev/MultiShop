@@ -2,7 +2,7 @@ using MediatR;
 
 namespace MultiShop.Order.Application.Features.CQRS.Commands.AddressCommands;
 
-public class RemoveAddressCommand:IRequest
+public class RemoveAddressCommand:IRequest<bool>
 {
     public int Id { get; set; }
 
