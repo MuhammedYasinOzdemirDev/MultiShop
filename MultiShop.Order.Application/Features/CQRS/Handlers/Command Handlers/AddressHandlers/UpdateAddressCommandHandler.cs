@@ -5,7 +5,7 @@ using MultiShop.Order.Infrastructure.Persistence.Interfaces;
 
 namespace MultiShop.Order.Application.Features.CQRS.Handlers.Command_Handlers.AddressHandlers;
 
-public class UpdateAddressCommandHandler : IRequestHandler<UpdateAddressCommand>
+public class UpdateAddressCommandHandler : IRequestHandler<UpdateAddressCommand,bool>
 {
     private readonly IRepository<Address> _repository;
 
@@ -14,7 +14,7 @@ public class UpdateAddressCommandHandler : IRequestHandler<UpdateAddressCommand>
         _repository = repository;
     }
 
-    public async Task Handle(UpdateAddressCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(UpdateAddressCommand request, CancellationToken cancellationToken)
     {
         var address = await _repository.GetByIdAsync(request.AddressId);
         if (address == null)
@@ -27,6 +27,6 @@ public class UpdateAddressCommandHandler : IRequestHandler<UpdateAddressCommand>
         address.City = request.City;
         address.Detail = request.Detail;
 
-        await _repository.UpdateAsync(address);
+     return   await _repository.UpdateAsync(address);
     }
 }

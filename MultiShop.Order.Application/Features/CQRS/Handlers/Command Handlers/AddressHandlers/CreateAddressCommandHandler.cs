@@ -24,7 +24,7 @@ public class CreateAddressCommandHandler:IRequestHandler<CreateAddressCommand, i
             UserId = request.UserId
         };
 
-        var createdAddress = await _repository.CreateAsync(address);
-        return createdAddress.AddressId;
+        var createdAddressId = await _repository.CreateAsync(address);
+        return createdAddressId;
     }
 }

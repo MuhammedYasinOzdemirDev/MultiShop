@@ -5,7 +5,7 @@ using MultiShop.Order.Infrastructure.Persistence.Interfaces;
 
 namespace MultiShop.Order.Application.Features.CQRS.Handlers.Command_Handlers.AddressHandlers;
 
-public class RemoveAddressCommandHandler : IRequestHandler<RemoveAddressCommand>
+public class RemoveAddressCommandHandler : IRequestHandler<RemoveAddressCommand,bool>
 {
     private readonly IRepository<Address> _repository;
 
@@ -14,7 +14,7 @@ public class RemoveAddressCommandHandler : IRequestHandler<RemoveAddressCommand>
         _repository = repository;
     }
 
-    public async Task Handle(RemoveAddressCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(RemoveAddressCommand request, CancellationToken cancellationToken)
     {
         var address = await _repository.GetByIdAsync(request.Id);
         if (address == null)
@@ -22,6 +22,6 @@ public class RemoveAddressCommandHandler : IRequestHandler<RemoveAddressCommand>
             throw new KeyNotFoundException("Address not found");
         }
 
-        await _repository.DeleteAsync(address);
+       return await _repository.DeleteAsync(address);
     }
 }
