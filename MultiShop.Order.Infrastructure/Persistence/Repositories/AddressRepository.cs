@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using MultiShop.Order.Domain.Entities;
 using MultiShop.Order.Infrastructure.Persistence.Interfaces;
 
@@ -6,33 +7,45 @@ namespace MultiShop.Order.Infrastructure.Persistence.Repositories;
 
 public class AddressRepository:IRepository<Address>
 {
-    public Task<List<Address>> GetAllAsync()
+    private readonly DbContext _context;
+    private readonly DbSet<Address> _dbSet;
+
+    public AddressRepository(DbContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
+        _dbSet = context.Set<Address>();
+    }
+    public async Task<List<Address>> GetAllAsync()
+    {
+        return await _dbSet.ToListAsync();
     }
 
-    public Task<Address> GetByIdAsync(int id)
+    public async Task<Address> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _dbSet.FindAsync(id);
     }
 
-    public Task<int> CreateAsync(Address entity)
+    public async Task<int> CreateAsync(Address entity)
     {
-        throw new NotImplementedException();
+        await _dbSet.AddAsync(entity);
+        await _context.SaveChangesAsync();
+        return (int)_context.Entry(entity).Property("AddressId").CurrentValue;
     }
 
-    public Task<bool> UpdateAsync(Address entiy)
+    public async Task<bool> UpdateAsync(Address entity)
     {
-        throw new NotImplementedException();
+        _dbSet.Update(entity);
+        return await _context.SaveChangesAsync() > 0;
     }
 
-    public Task<bool> DeleteAsync(Address entity)
+    public async Task<bool> DeleteAsync(Address entity)
     {
-        throw new NotImplementedException();
+        _dbSet.Remove(entity);
+        return await _context.SaveChangesAsync() > 0;
     }
 
-    public Task<Address> GetByIdFilterAsync(Expression<Func<Address, bool>> filter)
+    public async Task<Address> GetByIdFilterAsync(Expression<Func<Address, bool>> filter)
     {
-        throw new NotImplementedException();
+        return await _dbSet.FirstOrDefaultAsync(filter);
     }
 }

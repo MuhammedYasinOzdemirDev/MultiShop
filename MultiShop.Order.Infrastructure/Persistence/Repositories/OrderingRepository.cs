@@ -1,38 +1,51 @@
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using MultiShop.Order.Domain.Entities;
 using MultiShop.Order.Infrastructure.Persistence.Interfaces;
 
 namespace MultiShop.Order.Infrastructure.Persistence.Repositories;
 
-public class OrderingRExperssionepository:IRepository<Ordering>
+public class OrderingExperssionepository:IRepository<Ordering>
 {
-    public Task<List<Ordering>> GetAllAsync()
+    private readonly DbContext _context;
+    private readonly DbSet<Ordering> _dbSet;
+
+    public OrderingExperssionepository(DbContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
+        _dbSet = context.Set<Ordering>();
+    }
+    public async Task<List<Ordering>> GetAllAsync()
+    {
+        return await _dbSet.ToListAsync();
     }
 
-    public Task<Ordering> GetByIdAsync(int id)
+    public async Task<Ordering> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _dbSet.FindAsync(id);
     }
 
-    public Task<int> CreateAsync(Ordering entity)
+    public async Task<int> CreateAsync(Ordering entity)
     {
-        throw new NotImplementedException();
+        await _dbSet.AddAsync(entity);
+        await _context.SaveChangesAsync();
+        return (int)_context.Entry(entity).Property("OrderDetailId").CurrentValue;
     }
 
-    public Task<bool> UpdateAsync(Ordering entiy)
+    public async Task<bool> UpdateAsync(Ordering entity)
     {
-        throw new NotImplementedException();
+        _dbSet.Update(entity);
+        return await _context.SaveChangesAsync() > 0;
     }
 
-    public Task<bool> DeleteAsync(Ordering entity)
+    public async Task<bool> DeleteAsync(Ordering entity)
     {
-        throw new NotImplementedException();
+        _dbSet.Remove(entity);
+        return await _context.SaveChangesAsync() > 0;
     }
 
-    public Task<Ordering> GetByIdFilterAsync(Expression<Func<Ordering, bool>> filter)
+    public async Task<Ordering> GetByIdFilterAsync(Expression<Func<Ordering, bool>> filter)
     {
-        throw new NotImplementedException();
+        return await _dbSet.FirstOrDefaultAsync(filter);
     }
 }
