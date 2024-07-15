@@ -6,17 +6,16 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.Command_Handlers.Or
 
 public class UpdateOrderingCommandHandler:IRequestHandler<UpdateOrderingCommand,bool>
 {
-    private readonly IRepository<Ordering> _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateOrderingCommandHandler(IRepository<Ordering> repository)
+    public UpdateOrderingCommandHandler(IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _unitOfWork = unitOfWork;
     }
     
-
     public async Task<bool> Handle(UpdateOrderingCommand request, CancellationToken cancellationToken)
     {
-        var ordering = await _repository.GetByIdAsync(request.OrderingId);
+        var ordering = await _unitOfWork.Orderings.GetByIdAsync(request.OrderingId);
         if (ordering == null)
         {
             throw new KeyNotFoundException("Ordering not found");
@@ -24,6 +23,8 @@ public class UpdateOrderingCommandHandler:IRequestHandler<UpdateOrderingCommand,
         ordering.TotalPrice = request.TotalPrice;
         ordering.OrderDetails = request.OrderDetails;
         ordering.UserId = request.UserId;
-        return await _repository.UpdateAsync(ordering);
+        var value= await _unitOfWork.Orderings.UpdateAsync(ordering);
+        await _unitOfWork.CompleteAsync();
+        return value;
     }
 }

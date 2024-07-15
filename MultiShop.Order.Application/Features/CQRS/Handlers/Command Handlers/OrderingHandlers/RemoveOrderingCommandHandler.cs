@@ -8,21 +8,23 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.Command_Handlers.Or
 public class RemoveOrderingCommandHandler:IRequestHandler<RemoveOrderingCommand,bool>
 {
   
-    private readonly IRepository<Address> _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public RemoveOrderingCommandHandler(IRepository<Address> repository)
+    public RemoveOrderingCommandHandler(IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _unitOfWork = unitOfWork;
     }
     public async Task<bool> Handle(RemoveOrderingCommand request, CancellationToken cancellationToken)
     {
-        var ordering = await _repository.GetByIdAsync(request.Id);
+        var ordering = await _unitOfWork.Orderings.GetByIdAsync(request.Id);
         if (ordering == null)
         {
             throw new KeyNotFoundException("Ordering not found");
         }
 
-        return await _repository.DeleteAsync(ordering);
+        var value= await _unitOfWork.Orderings.DeleteAsync(ordering);
+        _unitOfWork.CompleteAsync();
+        return value;
     }
    
 }

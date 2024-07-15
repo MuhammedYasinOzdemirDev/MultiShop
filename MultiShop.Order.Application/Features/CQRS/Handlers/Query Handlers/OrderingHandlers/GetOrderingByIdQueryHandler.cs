@@ -8,16 +8,16 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.Query_Handlers.Orde
 
 public class GetOrderingByIdQueryHandler:IRequestHandler<GetOrderingByIdQuery,GetOrderingByIdResult>
 {
-    private readonly IRepository<Ordering> _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public GetOrderingByIdQueryHandler(IRepository<Ordering> repository)
+    public GetOrderingByIdQueryHandler(IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<GetOrderingByIdResult> Handle(GetOrderingByIdQuery request, CancellationToken cancellationToken)
     {
-        var value = await _repository.GetByIdAsync(request.Id);
+        var value = await _unitOfWork.Orderings.GetByIdAsync(request.Id);
         return new GetOrderingByIdResult
         {
             OrderingId = value.OrderingId,

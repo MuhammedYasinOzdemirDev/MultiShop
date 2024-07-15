@@ -8,15 +8,15 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.Query_Handlers.Orde
 
 public class GetOrderingQueryHandler:IRequestHandler<GetAllOrderingQuery,List<GetOrderingQueryResult>>
 {
-    private readonly IRepository<Ordering> _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public GetOrderingQueryHandler(IRepository<Ordering> repository)
+    public GetOrderingQueryHandler(IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _unitOfWork = unitOfWork;
     }
     public async Task<List<GetOrderingQueryResult>> Handle(GetAllOrderingQuery request, CancellationToken cancellationToken)
     {
-        var values = await _repository.GetAllAsync();
+        var values = await _unitOfWork.Orderings.GetAllAsync();
         return values.Select(value => new GetOrderingQueryResult
         {
             OrderingId = value.OrderingId,

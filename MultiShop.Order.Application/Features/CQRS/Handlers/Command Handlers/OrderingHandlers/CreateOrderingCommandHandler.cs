@@ -6,11 +6,11 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.Command_Handlers.Or
 
 public class CreateOrderingCommandHandler:IRequestHandler<CreateOrderingCommand,int>
 {
-    private readonly IRepository<Ordering> _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateOrderingCommandHandler(IRepository<Ordering> repository)
+    public CreateOrderingCommandHandler(IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<int> Handle(CreateOrderingCommand request, CancellationToken cancellationToken)
@@ -22,6 +22,8 @@ public class CreateOrderingCommandHandler:IRequestHandler<CreateOrderingCommand,
             OrderDate = DateTime.Now,
             OrderDetails = new List<OrderDetail>()
         };
-        return await _repository.CreateAsync(ordering);
+        var value= await _unitOfWork.Orderings.CreateAsync(ordering);
+        _unitOfWork.CompleteAsync();
+        return value;
     }
 }
