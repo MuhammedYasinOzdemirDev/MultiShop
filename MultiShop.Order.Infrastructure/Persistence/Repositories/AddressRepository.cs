@@ -1,16 +1,17 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using MultiShop.Order.Domain.Entities;
+using MultiShop.Order.Infrastructure.Data.Context;
 using MultiShop.Order.Infrastructure.Persistence.Interfaces;
 
 namespace MultiShop.Order.Infrastructure.Persistence.Repositories;
 
 public class AddressRepository:IRepository<Address>
 {
-    private readonly DbContext _context;
+    private readonly ApplicationDbContext _context;
     private readonly DbSet<Address> _dbSet;
 
-    public AddressRepository(DbContext context)
+    public AddressRepository(ApplicationDbContext context)
     {
         _context = context;
         _dbSet = context.Set<Address>();

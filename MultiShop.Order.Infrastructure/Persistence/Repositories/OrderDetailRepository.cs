@@ -1,16 +1,17 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using MultiShop.Order.Domain.Entities;
+using MultiShop.Order.Infrastructure.Data.Context;
 using MultiShop.Order.Infrastructure.Persistence.Interfaces;
 
 namespace MultiShop.Order.Infrastructure.Persistence.Repositories;
 
 public class OrderDetailRepository:IRepository<OrderDetail>
 {
-    private readonly DbContext _context;
+    private readonly ApplicationDbContext _context;
     private readonly DbSet<OrderDetail> _dbSet;
 
-    public OrderDetailRepository(DbContext context)
+    public OrderDetailRepository(ApplicationDbContext context)
     {
         _context = context;
         _dbSet = context.Set<OrderDetail>();
