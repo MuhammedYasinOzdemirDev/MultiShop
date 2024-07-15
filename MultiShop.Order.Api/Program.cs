@@ -4,6 +4,7 @@ using MultiShop.Order.Application.Handlers;
 using MultiShop.Order.Application.Services;
 using MultiShop.Order.Domain.Entities;
 using MultiShop.Order.Domain.Validator;
+using MultiShop.Order.Infrastructure.Registration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,10 @@ builder.Services.AddTransient<IValidator<Address>, AddressValidator>();
 builder.Services.AddTransient<IValidator<OrderDetail>, OrderDetailValidator>();
 builder.Services.AddTransient<IValidator<Ordering>, OrderingValidator>();
 
+
+// Unit of Work and Repositories
+builder.Services.AddUnitOfWork();
+builder.Services.AddRepositories();
 
 builder.Services.AddApplicationService(builder.Configuration);
 
