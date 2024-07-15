@@ -7,16 +7,16 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.Command_Handlers.Ad
 
 public class UpdateAddressCommandHandler : IRequestHandler<UpdateAddressCommand,bool>
 {
-    private readonly IRepository<Address> _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateAddressCommandHandler(IRepository<Address> repository)
+    public UpdateAddressCommandHandler(IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<bool> Handle(UpdateAddressCommand request, CancellationToken cancellationToken)
     {
-        var address = await _repository.GetByIdAsync(request.AddressId);
+        var address = await _unitOfWork.Addresses.GetByIdAsync(request.AddressId);
         if (address == null)
         {
             throw new KeyNotFoundException("Address not found");
@@ -27,6 +27,8 @@ public class UpdateAddressCommandHandler : IRequestHandler<UpdateAddressCommand,
         address.City = request.City;
         address.Detail = request.Detail;
 
-     return   await _repository.UpdateAsync(address);
+     var value=await _unitOfWork.Addresses.UpdateAsync(address);
+     _unitOfWork.CompleteAsync();
+     return value;
     }
 }

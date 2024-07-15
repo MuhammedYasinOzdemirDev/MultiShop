@@ -8,16 +8,16 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.Query_Handlers.Addr
 
 public class GetAddressByIdQueryHandler : IRequestHandler<GetAddressByIdQuery, GetAddressByIdQueryResult>
 {
-    private readonly IRepository<Address> _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public GetAddressByIdQueryHandler(IRepository<Address> repository)
+    public GetAddressByIdQueryHandler(IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<GetAddressByIdQueryResult> Handle(GetAddressByIdQuery request, CancellationToken cancellationToken)
     {
-        var address = await _repository.GetByIdAsync(request.Id);
+        var address = await _unitOfWork.Addresses.GetByIdAsync(request.Id);
         if (address == null)
         {
             throw new KeyNotFoundException("Address not found");

@@ -7,11 +7,11 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.Command_Handlers.Ad
 
 public class CreateAddressCommandHandler:IRequestHandler<CreateAddressCommand, int>
 {
-    private readonly IRepository<Address> _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateAddressCommandHandler(IRepository<Address> repository)
+    public CreateAddressCommandHandler(IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<int> Handle(CreateAddressCommand request, CancellationToken cancellationToken)
@@ -24,7 +24,8 @@ public class CreateAddressCommandHandler:IRequestHandler<CreateAddressCommand, i
             UserId = request.UserId
         };
 
-        var createdAddressId = await _repository.CreateAsync(address);
+        var createdAddressId = await _unitOfWork.Addresses.CreateAsync(address);
+        await _unitOfWork.CompleteAsync();
         return createdAddressId;
     }
 }

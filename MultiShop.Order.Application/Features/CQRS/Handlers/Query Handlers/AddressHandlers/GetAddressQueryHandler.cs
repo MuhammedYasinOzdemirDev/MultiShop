@@ -8,16 +8,16 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.Query_Handlers.Addr
 
 public class GetAddressQueryHandler:IRequestHandler<GetAllAddressQuery, List<GetAddressQueryResult>>
 {
-    private readonly IRepository<Address> _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public GetAddressQueryHandler(IRepository<Address> repository)
+    public GetAddressQueryHandler(IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<List<GetAddressQueryResult>> Handle(GetAllAddressQuery request, CancellationToken cancellationToken)
     {
-        var addresses = await _repository.GetAllAsync();
+        var addresses = await _unitOfWork.Addresses.GetAllAsync();
 
         return addresses.Select(address => new GetAddressQueryResult
         {
