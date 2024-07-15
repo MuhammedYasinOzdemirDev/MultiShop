@@ -20,38 +20,81 @@ public class OrderDetailService : IOrderDetailService
         _updateValidator = updateValidator;
     }
 
-    public async Task<int> CreateOrderDetailAsync(CreateOrderDetailCommand command)
-    {
-        var validationResult = await _createValidator.ValidateAsync(command);
-        if (!validationResult.IsValid)
+     public async Task<int> CreateOrderDetailAsync(CreateOrderDetailCommand command)
         {
-            throw new ValidationException(validationResult.Errors);
+            try
+            {
+                var validationResult = await _createValidator.ValidateAsync(command);
+                if (!validationResult.IsValid)
+                {
+                    throw new ValidationException(validationResult.Errors);
+                }
+                return await _mediator.Send(command);
+            }
+            catch (ValidationException ex)
+            {
+                throw new ApplicationException("Validation failed for CreateOrderDetailCommand", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while creating the order detail: {ex.Message}", ex);
+            }
         }
-        return await _mediator.Send(command);
-    }
 
-    public async Task<bool> UpdateOrderDetailAsync(UpdateOrderDetailCommand command)
-    {
-        var validationResult = await _updateValidator.ValidateAsync(command);
-        if (!validationResult.IsValid)
+        public async Task<bool> UpdateOrderDetailAsync(UpdateOrderDetailCommand command)
         {
-            throw new ValidationException(validationResult.Errors);
+            try
+            {
+                var validationResult = await _updateValidator.ValidateAsync(command);
+                if (!validationResult.IsValid)
+                {
+                    throw new ValidationException(validationResult.Errors);
+                }
+                return await _mediator.Send(command);
+            }
+            catch (ValidationException ex)
+            {
+                throw new ApplicationException("Validation failed for UpdateOrderDetailCommand", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while updating the order detail: {ex.Message}", ex);
+            }
         }
-        return await _mediator.Send(command);
-    }
 
-    public async Task<bool> RemoveOrderDetailAsync(RemoveOrderDetailCommand command)
-    {
-        return await _mediator.Send(command);
-    }
+        public async Task<bool> RemoveOrderDetailAsync(RemoveOrderDetailCommand command)
+        {
+            try
+            {
+                return await _mediator.Send(command);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while removing the order detail: {ex.Message}", ex);
+            }
+        }
 
-    public async Task<GetOrderDetailByIdResult> GetOrderDetailByIdAsync(GetOrderDetailByIdQuery query)
-    {
-        return await _mediator.Send(query);
-    }
+        public async Task<GetOrderDetailByIdResult> GetOrderDetailByIdAsync(GetOrderDetailByIdQuery query)
+        {
+            try
+            {
+                return await _mediator.Send(query);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while fetching the order detail: {ex.Message}", ex);
+            }
+        }
 
-    public async Task<List<GetOrderDetailQueryResult>> GetAllOrderDetailsAsync()
-    {
-        return await _mediator.Send(new GetAllOrderDetailQuery());
+        public async Task<List<GetOrderDetailQueryResult>> GetAllOrderDetailsAsync()
+        {
+            try
+            {
+                return await _mediator.Send(new GetAllOrderDetailQuery());
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while fetching the order details: {ex.Message}", ex);
+            }
+        }
     }
-}
