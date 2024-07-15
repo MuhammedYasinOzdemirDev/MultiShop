@@ -8,6 +8,7 @@ using MultiShop.Order.Infrastructure.Registration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddControllers()
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Program>());
 builder.Services.AddEndpointsApiExplorer();
