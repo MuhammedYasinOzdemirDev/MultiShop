@@ -7,11 +7,11 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.Command_Handlers.Or
 
 public class CreateOrderDetailCommandHandler:IRequestHandler<CreateOrderDetailCommand,int>
 {
-    private readonly IRepository<OrderDetail> _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateOrderDetailCommandHandler(IRepository<OrderDetail> repository)
+    public CreateOrderDetailCommandHandler(IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _unitOfWork = unitOfWork;
     }
     public async Task<int> Handle(CreateOrderDetailCommand request, CancellationToken cancellationToken)
     {
@@ -24,7 +24,8 @@ ProductAmount = request.ProductAmount,
 ProductTotalPrice = request.ProductTotalPrice,
 OrderingId = request.OrderingId
         };
-        var id = await _repository.CreateAsync(orderDetail);
+        var id = await _unitOfWork.OrderDetails.CreateAsync(orderDetail);
+        _unitOfWork.CompleteAsync();
         return id;
     }
 }

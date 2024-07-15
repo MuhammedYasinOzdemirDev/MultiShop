@@ -7,20 +7,22 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.Command_Handlers.Or
 
 public class RemoveOrderDetailCommandHandler:IRequestHandler<RemoveOrderDetailCommand,bool>
 {
-    private readonly IRepository<OrderDetail> _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public RemoveOrderDetailCommandHandler(IRepository<OrderDetail> repository)
+    public RemoveOrderDetailCommandHandler(IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _unitOfWork = unitOfWork;
     }
     public async Task<bool> Handle(RemoveOrderDetailCommand request, CancellationToken cancellationToken)
     {
-        var orderDetail = await _repository.GetByIdAsync(request.Id);
+        var orderDetail = await _unitOfWork.OrderDetails.GetByIdAsync(request.Id);
         if (orderDetail == null)
         {
             throw new KeyNotFoundException("orderDetail not found");
         }
 
-        return await _repository.DeleteAsync(orderDetail);
+        var value= await _unitOfWork.OrderDetails.DeleteAsync(orderDetail);
+        await _unitOfWork.CompleteAsync();
+        return value;
     }
 }
