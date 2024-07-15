@@ -16,7 +16,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IValidator<Address>, AddressValidator>();
 builder.Services.AddTransient<IValidator<OrderDetail>, OrderDetailValidator>();
 builder.Services.AddTransient<IValidator<Ordering>, OrderingValidator>();
-
+// Database context
+builder.Services.AddMySqlDbContext(builder.Configuration);
 
 // Unit of Work and Repositories
 builder.Services.AddUnitOfWork();
