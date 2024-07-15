@@ -20,38 +20,90 @@ public class AddressService:IAddressService
         _updateValidator = updateValidator;
     }
 
-    public async Task<int> CreateAddressAsync(CreateAddressCommand command)
+   public async Task<int> CreateAddressAsync(CreateAddressCommand command)
     {
-        var validationResult = await _createValidator.ValidateAsync(command);
-        if (!validationResult.IsValid)
+        try
         {
-            throw new ValidationException(validationResult.Errors);
+            var validationResult = await _createValidator.ValidateAsync(command);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
+            return await _mediator.Send(command);
         }
-        return await _mediator.Send(command);
+        catch (ValidationException ex)
+        {
+            // Validation exception handling
+            throw new ApplicationException("Validation failed for CreateAddressCommand", ex);
+        }
+        catch (Exception ex)
+        {
+            // General exception handling
+            throw new ApplicationException("An error occurred while creating the address", ex);
+        }
     }
 
     public async Task<bool> UpdateAddressAsync(UpdateAddressCommand command)
     {
-        var validationResult = await _updateValidator.ValidateAsync(command);
-        if (!validationResult.IsValid)
+        try
         {
-            throw new ValidationException(validationResult.Errors);
+            var validationResult = await _updateValidator.ValidateAsync(command);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
+            return await _mediator.Send(command);
         }
-        return await _mediator.Send(command);
+        catch (ValidationException ex)
+        {
+            // Validation exception handling
+            throw new ApplicationException("Validation failed for UpdateAddressCommand", ex);
+        }
+        catch (Exception ex)
+        {
+            // General exception handling
+            throw new ApplicationException("An error occurred while updating the address", ex);
+        }
     }
 
     public async Task<bool> RemoveAddressAsync(RemoveAddressCommand command)
     {
-        return await _mediator.Send(command);
+        try
+        {
+            return await _mediator.Send(command);
+        }
+        catch (Exception ex)
+        {
+            // General exception handling
+            throw new ApplicationException("An error occurred while removing the address", ex);
+        }
     }
 
     public async Task<GetAddressByIdQueryResult> GetAddressByIdAsync(GetAddressByIdQuery query)
     {
-        return await _mediator.Send(query);
+        try
+        {
+            return await _mediator.Send(query);
+        }
+        catch (Exception ex)
+        {
+            // General exception handling
+            throw new ApplicationException("An error occurred while retrieving the address", ex);
+        }
     }
 
     public async Task<List<GetAddressQueryResult>> GetAllAddressesAsync()
     {
-        return (List<GetAddressQueryResult>)await _mediator.Send(new GetAddressQueryResult());
+        try
+        {
+            return await _mediator.Send(new GetAllAddressQuery());
+        }
+        catch (Exception ex)
+        {
+            // General exception handling
+            throw new ApplicationException("An error occurred while retrieving all addresses", ex);
+        }
     }
 }
