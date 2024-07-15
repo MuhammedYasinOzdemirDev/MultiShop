@@ -21,37 +21,80 @@ public class OrderingService : IOrderingService
     }
 
     public async Task<int> CreateOrderingAsync(CreateOrderingCommand command)
-    {
-        var validationResult = await _createValidator.ValidateAsync(command);
-        if (!validationResult.IsValid)
         {
-            throw new ValidationException(validationResult.Errors);
+            try
+            {
+                var validationResult = await _createValidator.ValidateAsync(command);
+                if (!validationResult.IsValid)
+                {
+                    throw new ValidationException(validationResult.Errors);
+                }
+                return await _mediator.Send(command);
+            }
+            catch (ValidationException ex)
+            {
+                throw new ApplicationException("Validation failed for CreateOrderingCommand", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while creating the ordering: {ex.Message}", ex);
+            }
         }
-        return await _mediator.Send(command);
-    }
 
-    public async Task<bool> UpdateOrderingAsync(UpdateOrderingCommand command)
-    {
-        var validationResult = await _updateValidator.ValidateAsync(command);
-        if (!validationResult.IsValid)
+        public async Task<bool> UpdateOrderingAsync(UpdateOrderingCommand command)
         {
-            throw new ValidationException(validationResult.Errors);
+            try
+            {
+                var validationResult = await _updateValidator.ValidateAsync(command);
+                if (!validationResult.IsValid)
+                {
+                    throw new ValidationException(validationResult.Errors);
+                }
+                return await _mediator.Send(command);
+            }
+            catch (ValidationException ex)
+            {
+                throw new ApplicationException("Validation failed for UpdateOrderingCommand", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while updating the ordering: {ex.Message}", ex);
+            }
         }
-        return await _mediator.Send(command);
-    }
 
-    public async Task<bool> RemoveOrderingAsync(RemoveOrderingCommand command)
-    {
-        return await _mediator.Send(command);
-    }
+        public async Task<bool> RemoveOrderingAsync(RemoveOrderingCommand command)
+        {
+            try
+            {
+                return await _mediator.Send(command);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while removing the ordering: {ex.Message}", ex);
+            }
+        }
 
-    public async Task<GetOrderingByIdResult> GetOrderingByIdAsync(GetOrderingByIdQuery query)
-    {
-        return await _mediator.Send(query);
-    }
+        public async Task<GetOrderingByIdResult> GetOrderingByIdAsync(GetOrderingByIdQuery query)
+        {
+            try
+            {
+                return await _mediator.Send(query);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while fetching the ordering: {ex.Message}", ex);
+            }
+        }
 
-    public async Task<List<GetOrderingQueryResult>> GetAllOrderingsAsync()
-    {
-        return (List<GetOrderingQueryResult>)await _mediator.Send(new GetOrderingQueryResult());
-    }
+        public async Task<List<GetOrderingQueryResult>> GetAllOrderingsAsync()
+        {
+            try
+            {
+                return await _mediator.Send(new GetAllOrderingQuery());
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while fetching the orderings: {ex.Message}", ex);
+            }
+        }
 }
